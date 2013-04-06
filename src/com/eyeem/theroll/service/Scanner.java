@@ -68,7 +68,7 @@ public class Scanner extends Service {
             }
          });
          t.setPriority(Thread.MIN_PRIORITY);
-         t.run();
+         t.start();
       }
    }
 
