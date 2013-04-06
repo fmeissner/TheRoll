@@ -1,0 +1,12 @@
+src/com/baseapp/eyeem/etc/EyeemAppSettings.java
+gen/*
+bin/*
+.DS_Store
+.classpath
+.idea/
+*.iml
+*.iws
+default.properties
+project.properties
+.project
+out/*
