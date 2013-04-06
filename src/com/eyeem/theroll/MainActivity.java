@@ -99,37 +99,4 @@ public class MainActivity extends Activity {
          }
       });
    }
-
-   APIClientConfig IMAGA_CONFIG = new APIClientConfig("acc_b6c25fc6", "7c0765b6ce790023f06cfa18a7b47790", "78.128.78.162");
-
-   public void testImagga() throws IOException {
-      // Initialize the upload client with the configuration you have received from Imagga.
-      UploadClient uploadClient = new UploadClient(IMAGA_CONFIG);
-
-      // Initialize the client with the configuration you have received from Imagga.
-      //ColorAPIClient client = new ColorAPIClient(IMAGA_CONFIG);
-
-      //ColorsByUrlsRequest request = new ColorsByUrlsRequest();
-
-      //request.setUrlsToProcess(Arrays.asList(
-      //   new IndexableImage("http://www.jakobnielsen.net/etc/images/cool-cartoon-291732.png", 100),
-      //   new IndexableImage("http://www.toondoo.com/public/l/a/z/lazee/toons/cool-cartoon-152229.png", 101)));
-
-      //List<ColorResult> colorResults = client.colorsByUploadCode(uploadClient.uploadForProcessing(new File("/mnt/sdcard/test.jpg")));
-      //for (ColorResult res : colorResults) {
-      //   for (ExtendedColor color : res.getInfo().getImageColors()) {
-      //      Log.i("COLOR", color.getHtmlCode());
-      //   }
-      //}
-
-      // Initialize the client with the configuration you have received from Imagga.
-      CropSliceAPIClient client = new CropSliceAPIClient(IMAGA_CONFIG);
-
-      List<SmartCropping> lst = client.smartCroppingByUploadCode(
-         uploadClient.uploadForProcessing(new File("/mnt/sdcard/test.jpg")),
-            true,
-            Arrays.asList(new Resolution(50, 50)),
-            true);
-      lst.size();
-   }
 }
