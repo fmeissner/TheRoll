@@ -98,12 +98,6 @@ public class MainActivity extends Activity {
             }
          }
       });
-
-      try {
-         testImagga();
-      } catch (Throwable e) {
-         e.printStackTrace();
-      }
    }
 
    APIClientConfig IMAGA_CONFIG = new APIClientConfig("acc_b6c25fc6", "7c0765b6ce790023f06cfa18a7b47790", "78.128.78.162");
