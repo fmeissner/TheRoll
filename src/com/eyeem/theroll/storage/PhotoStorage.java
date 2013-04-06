@@ -31,7 +31,7 @@ public class PhotoStorage extends Storage<Photo> {
    public static void initialize(Context ctx) {
       if (sInstance == null) {
          sInstance = new PhotoStorage(ctx);
-         sInstance.init(150);
+         sInstance.init(1000);
       }
    }
 

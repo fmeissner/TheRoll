@@ -3,6 +3,7 @@ package com.eyeem.theroll;
 import android.app.Application;
 import android.content.Intent;
 import com.eyeem.theroll.service.Scanner;
+import com.eyeem.theroll.storage.PhotoStorage;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +19,9 @@ public class App extends Application {
    public void onCreate() {
       super.onCreate();
       the = this;
+
+      // initialize storage
+      PhotoStorage.initialize(this);
 
       // start scanning
       Intent scanIntent = new Intent(this, Scanner.class);
