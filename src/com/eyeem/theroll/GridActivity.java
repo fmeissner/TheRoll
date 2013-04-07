@@ -251,8 +251,7 @@ public class GridActivity extends Activity implements View.OnClickListener {
          query = new Storage.Query<Photo>() {
             @Override
             public boolean eval(Photo photo) {
-               // TODO implement
-               return false;
+               return photo.colors != null && photo.colors.contains(color);
             }
          };
       }

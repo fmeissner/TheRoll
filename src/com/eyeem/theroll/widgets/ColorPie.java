@@ -43,9 +43,11 @@ public class ColorPie extends GraphicalView {
    }
 
    ArrayList<SimpleSeriesRenderer> currentRenderers = new ArrayList<SimpleSeriesRenderer>();
+   public ArrayList<String> inOrder = new ArrayList<String>();
 
    public void setupValues(HashMap<String, Integer> values) {
       setup.dataset.clear();
+      inOrder.clear();
       for (SimpleSeriesRenderer ssr : currentRenderers) {
          setup.renderer.removeSeriesRenderer(ssr);
       }
@@ -55,10 +57,11 @@ public class ColorPie extends GraphicalView {
       //setup.dataset.setTitle(null);
       int count = values.keySet().size();
       for (String colorName : values.keySet()) {
+         inOrder.add(colorName);
          setup.dataset.add(colorName, values.get(colorName));
          SimpleSeriesRenderer r = new SimpleSeriesRenderer();
          currentRenderers.add(r);
-         Log.i(getContext(),"color:"+colorName);
+         Log.i(getContext(), "color:" + colorName);
          r.setColor(AllColorsEver.name(colorName));
          setup.renderer.addSeriesRenderer(r);
       }

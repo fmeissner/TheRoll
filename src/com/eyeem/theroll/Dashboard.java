@@ -124,6 +124,15 @@ public class Dashboard extends Activity implements Storage.Subscription {
             colorPie.setupValues(PhotoStorage.colorStats);
             colorPie.repaint();
             colorPie.invalidate();
+            colorPie.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                  SeriesSelection seriesSelection = colorPie.getCurrentSeriesAndPoint();
+                  int index = seriesSelection.getPointIndex();
+                  GridActivity.startWithQuery(null, null,
+                     colorPie.inOrder.get(index), Dashboard.this);
+               }
+            });
          }
       });
    }
