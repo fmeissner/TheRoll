@@ -16,33 +16,34 @@
 
 package net.jakobnielsen.imagga.upload.client;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import net.jakobnielsen.imagga.client.APIClient;
 import net.jakobnielsen.imagga.client.APIClientConfig;
 import net.jakobnielsen.imagga.client.ApiConstants;
 import net.jakobnielsen.imagga.upload.convert.UploadConverter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class UploadClient extends APIClient {
 
     private static final String LINE_FEED = "\r\n";
+    private static final int THUMB_SIZE = 200;
 
     public UploadClient(APIClientConfig apiConfig) {
         super(apiConfig, "uploadforprocessing");
     }
 
     public String uploadForProcessing(File imageFile) throws IOException {
-        return uploadForProcessing(new FileInputStream(imageFile), imageFile.getName());
+
+       ByteArrayOutputStream baos = new ByteArrayOutputStream();
+       Bitmap bm = getThumbnail(imageFile);
+       bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+       ByteArrayInputStream bis = new ByteArrayInputStream(baos.toByteArray());
+
+       return uploadForProcessing(bis, imageFile.getName());
     }
 
     // TODO : Create a general HTTP client for the project, instead of having two different ones.
@@ -103,4 +104,19 @@ public class UploadClient extends APIClient {
         return converter.convert(response.toString());
     }
 
+   Bitmap getThumbnail(File image) {
+
+      BitmapFactory.Options bounds = new BitmapFactory.Options();
+      bounds.inJustDecodeBounds = true;
+      BitmapFactory.decodeFile(image.getPath(), bounds);
+      if ((bounds.outWidth == -1) || (bounds.outHeight == -1))
+         return null;
+
+      int originalSize = (bounds.outHeight > bounds.outWidth) ? bounds.outHeight
+              : bounds.outWidth;
+
+      BitmapFactory.Options opts = new BitmapFactory.Options();
+      opts.inSampleSize = originalSize / UploadClient.THUMB_SIZE;
+      return BitmapFactory.decodeFile(image.getPath(), opts);
+   }
 }

@@ -4,6 +4,10 @@ import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import com.eyeem.theroll.model.Photo;
@@ -17,8 +21,9 @@ import net.jakobnielsen.imagga.upload.client.UploadClient;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -76,17 +81,24 @@ public class Scanner extends Service {
       // TODO scan photos here
       Log.i(this, "scanPhotos");
       ContentResolver cr = getContentResolver();
-      Cursor cursor = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+      final String[] columns = {
+              MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA, MediaStore.Images.Media.TITLE, MediaStore.Images.Media.DATE_TAKEN,
+              MediaStore.Images.Media.SIZE, MediaStore.Images.Media.LATITUDE, MediaStore.Images.Media.LONGITUDE, "width", "height"
+      };
+      Cursor cursor = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, null);
       cursor.moveToPosition(-1);
       int processedCount = 0;
       while (cursor.moveToNext()) {
          String id = String.valueOf(cursor.getInt((cursor.getColumnIndex(MediaStore.Images.Media._ID))));
-         Photo photo = process(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)), id);
+         String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+         Photo photo = process(filePath, id);
+         photo.width = Integer.parseInt(cursor.getString(cursor.getColumnIndex("width")));
+         photo.height = Integer.parseInt(cursor.getString(cursor.getColumnIndex("height")));
          if (photo != null) {
             storage.push(photo);
          }
          processedCount++;
-         if (processedCount > 2) {
+         if (processedCount > 1) {
             // TMP
             break;
          }
@@ -95,33 +107,130 @@ public class Scanner extends Service {
    }
 
    private Photo process(String filePath, String id) {
-      Log.i(this, "process("+filePath+")");
+      Log.i(this, "scanPhotos process("+filePath+")");
       Photo photo = new Photo();
       photo.id = id;
       photo.filePath = filePath;
       try {
+         //GET basic metadata (lat, lng, width, height, timestamp)
+         ExifInterface newExif=null;
+         newExif = new ExifInterface(filePath);
+         if(newExif.getAttribute(ExifInterface.TAG_GPS_LATITUDE) != null && newExif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE) != null){
+            try{
+               photo.lat = ExifLatLong(newExif.getAttribute(ExifInterface.TAG_GPS_LATITUDE),newExif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF));
+               photo.lon = ExifLatLong(newExif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE),newExif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF));
+               Geocoder gcd = new Geocoder(this, Locale.getDefault());
+               List<Address> addresses = gcd.getFromLocation(photo.lat, photo.lon, 1);
+               if (addresses.size() > 0){
+                  photo.city = addresses.get(0).getLocality();
+                  photo.country = addresses.get(0).getCountryName();
+               }
+               getTimeOfDay(newExif.getAttribute(ExifInterface.TAG_DATETIME), photo);
+               if(photo.width==0){
+                  photo.width = Integer.parseInt(newExif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH));
+               }
+               if(photo.height==0){
+                  photo.height = Integer.parseInt(newExif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
+               }
+            }catch (Exception e) {
+               // TODO: handle exception
+            }
+         }
+         //GET inferred data (day, time of day, city, country)
+      } catch (Throwable e){
+
+      }
+      try {
          photo.colors = colorQuery(filePath);
       } catch (Throwable e) {
-         Log.e(this, "colorQuery("+filePath+") error", e);
+         Log.e(this, "scanPhotos colorQuery("+filePath+") error", e);
       }
+      printPhoto(photo);
       return photo;
    }
 
    APIClientConfig IMAGA_CONFIG = new APIClientConfig("acc_b6c25fc6", "7c0765b6ce790023f06cfa18a7b47790", "78.128.78.162");
 
-   private ArrayList<Integer> colorQuery(String filePath) throws IOException {
+   private ArrayList<String> colorQuery(String filePath) throws IOException {
       ColorAPIClient client = new ColorAPIClient(IMAGA_CONFIG);
 
       UploadClient uploadClient = new UploadClient(IMAGA_CONFIG);
 
       List<ColorResult> colorResults = client.colorsByUploadCode(uploadClient.uploadForProcessing(new File(filePath)));
-      ArrayList<Integer> colorsInt = new ArrayList<Integer>();
+      ArrayList<String> colorsInt = new ArrayList<String>();
       for (ColorResult res : colorResults) {
          for (ExtendedColor color : res.getInfo().getImageColors()) {
-            Log.i(this, "colorQuery()"+color.getHtmlCode());
-            colorsInt.add(Integer.parseInt(color.getHtmlCode().replaceAll("#", ""), 16));
+            Log.i(this, "scanPhotos closest parent: "+color.getClosestPaletteColorParent()+" w/ percent:"+color.getPercent());
+            if(color.getPercent()>20.0){
+               //TODO: this might actually be adding the same parent twice based on the child.
+               colorsInt.add(color.getClosestPaletteColorParent());
+               Log.i(this, "scanPhotos adding color: "+color.getClosestPaletteColorParent());
+            }
          }
       }
       return colorsInt;
+   }
+
+   public float ExifLatLong(String value, String ref) throws Exception {
+      Float result = null;
+      String[] DMS = value.split(",", 3);
+
+      String[] stringD = DMS[0].split("/", 2);
+      Double D0 = Double.valueOf(stringD[0]);
+      Double D1 = Double.valueOf(stringD[1]);
+      Double FloatD = D0 / D1;
+
+      String[] stringM = DMS[1].split("/", 2);
+      Double M0 = Double.valueOf(stringM[0]);
+
+      Double M1 = Double.valueOf(stringM[1]);
+      Double FloatM = M0 / M1;
+
+      String[] stringS = DMS[2].split("/", 2);
+      Double S0 = Double.valueOf(stringS[0]);
+      Double S1 = Double.valueOf(stringS[1]);
+      Double FloatS = S0 / S1;
+
+      result = new Float(FloatD + (FloatM / 60) + (FloatS / 3600));
+
+      if (ref.equals("N") || ref.equals("E")) {
+         return result;
+      } else {
+         return 0 - result;
+      }
+   }
+
+   public void getTimeOfDay(String dateTime,Photo photo){
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+      Date convertedDate = new Date();
+      try {
+         convertedDate = dateFormat.parse(dateTime);
+      } catch (ParseException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      dateFormat.applyPattern("EEEE");
+      photo.day = dateFormat.format(convertedDate);
+      dateFormat.applyPattern("HH");
+      int hour = Integer.parseInt(dateFormat.format(convertedDate));
+      if(hour >=0 && hour <= 6)
+         photo.timeOfDay = "Night";
+      else if(hour >6 && hour < 12)
+         photo.timeOfDay = "Morning";
+      else if(hour >=12 && hour < 18)
+         photo.timeOfDay = "Afternoon";
+      else
+         photo.timeOfDay = "Evening";
+   }
+
+   public void printPhoto(Photo p){
+      Log.i(this,"scanPhoto width:"+p.width);
+      Log.i(this,"scanPhoto height:"+p.height);
+      Log.i(this,"scanPhoto lat:"+p.lat);
+      Log.i(this,"scanPhoto lon:"+p.lon);
+      Log.i(this,"scanPhoto city:"+p.city);
+      Log.i(this,"scanPhoto country:"+p.country);
+      Log.i(this,"scanPhoto time:"+p.timeOfDay);
+      Log.i(this,"scanPhoto day:"+p.day);
    }
 }
