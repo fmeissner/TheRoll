@@ -45,6 +45,7 @@ public class ColorPie extends GraphicalView {
    ArrayList<SimpleSeriesRenderer> currentRenderers = new ArrayList<SimpleSeriesRenderer>();
 
    public void setupValues(HashMap<String, Integer> values) {
+      setup.dataset.clear();
       for (SimpleSeriesRenderer ssr : currentRenderers) {
          setup.renderer.removeSeriesRenderer(ssr);
       }

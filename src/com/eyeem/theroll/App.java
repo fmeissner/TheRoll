@@ -25,7 +25,7 @@ public class App extends Application {
       PhotoStorage.initialize(this);
 
       // first load storage, then start scanning
-      PhotoStorage.all().subscribe(new Storage.Subscription() {
+      PhotoStorage.all.subscribe(new Storage.Subscription() {
          @Override
          public void onUpdate(Action action) {
             if (action.name.equals(Storage.Subscription.LOADED)) {
@@ -35,6 +35,6 @@ public class App extends Application {
             }
          }
       });
-      PhotoStorage.all().load();
+      PhotoStorage.all.load();
    }
 }

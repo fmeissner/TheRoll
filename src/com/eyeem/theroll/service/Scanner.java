@@ -69,7 +69,7 @@ public class Scanner extends Service {
             @Override
             public void run() {
                scanPhotos();
-               PhotoStorage.all().save();
+               PhotoStorage.all.save();
             }
          });
          t.setPriority(Thread.MIN_PRIORITY);
@@ -105,11 +105,11 @@ public class Scanner extends Service {
          if(height!=null)
             photo.height = Integer.parseInt(height);*/
          if (photo != null) {
-            storage.all().add(photo);
+            PhotoStorage.all.add(photo);
          }
          if (processedCount > 0 && processedCount % 20 == 0) {
             // save photos every 20 pics
-            PhotoStorage.all().save();
+            PhotoStorage.all.save();
          }
          processedCount++;
          if (processedCount > 150) {

@@ -34,7 +34,8 @@ public class PhotoStorage extends Storage<Photo> {
       if (sInstance == null) {
          sInstance = new PhotoStorage(ctx);
          sInstance.init(1000);
-         all().setTrimSize(1000);
+         all = sInstance.obtainList("all");
+         all.setTrimSize(1000);
       }
    }
 
@@ -42,13 +43,11 @@ public class PhotoStorage extends Storage<Photo> {
       return sInstance;
    }
 
-   public static List all() {
-      return sInstance.obtainList("all");
-   }
+   public static List all;
 
-   public int[] daysStats = {0, 0, 0, 0};
-   public HashMap<String, Integer> cityStats = new HashMap<String, Integer>();
-   public HashMap<String, Integer> colorStats = new HashMap<String, Integer>();
+   public static int[] daysStats = {0, 0, 0, 0};
+   public static HashMap<String, Integer> cityStats = new HashMap<String, Integer>();
+   public static HashMap<String, Integer> colorStats = new HashMap<String, Integer>();
 
    @Override
    protected void addOrUpdate(String id, Photo object) {

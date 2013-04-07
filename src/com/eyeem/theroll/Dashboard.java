@@ -16,9 +16,6 @@ public class Dashboard extends Activity implements Storage.Subscription {
 
    ScrollView scrollView;
    LinearLayout ll;
-   TimeOfADay timeOfADay;
-   Cities cities;
-   ColorPie colorPie;
    Handler handler;
 
    protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +27,6 @@ public class Dashboard extends Activity implements Storage.Subscription {
       ll.setOrientation(LinearLayout.VERTICAL);
       scrollView.addView(ll, -1, -1);
       scrollView.setBackgroundColor(getResources().getColor(R.color.bg));
-
-      timeOfADay = new TimeOfADay(this);
-      cities = new Cities(this);
-      colorPie = new ColorPie(this);
-
-      int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
-      ll.addView(timeOfADay, -1, h);
-      ll.addView(cities, -1, h);
-      ll.addView(colorPie, -1, h);
-
       setContentView(scrollView);
       /*mChartView.setOnClickListener(new View.OnClickListener() {
          public void onClick(View v) {
@@ -63,30 +50,40 @@ public class Dashboard extends Activity implements Storage.Subscription {
    @Override
    protected void onResume() {
       super.onResume();
-      PhotoStorage.all().subscribe(this);
+      PhotoStorage.all.subscribe(this);
       onUpdate(null);
    }
 
    @Override
    protected void onPause() {
       super.onPause();
-      PhotoStorage.all().unsubscribe(this);
+      PhotoStorage.all.unsubscribe(this);
    }
 
    @Override
    public void onUpdate(Action action) {
       handler.post(new Runnable() {
          @Override
-         public void run() {
-            timeOfADay.setValues(PhotoStorage.getInstance().daysStats);
+         public void run() {;
+            ll.removeAllViews();
+            TimeOfADay timeOfADay = new TimeOfADay(getBaseContext());
+            Cities cities = new Cities(getBaseContext());
+            ColorPie colorPie = new ColorPie(getBaseContext());
+
+            int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
+            ll.addView(timeOfADay, -1, h);
+            ll.addView(cities, -1, h);
+            ll.addView(colorPie, -1, h);
+
+            timeOfADay.setValues(PhotoStorage.daysStats);
             timeOfADay.repaint();
             timeOfADay.invalidate();
 
-            cities.setupValues(PhotoStorage.getInstance().cityStats);
+            cities.setupValues(PhotoStorage.cityStats);
             cities.repaint();
             cities.invalidate();
 
-            colorPie.setupValues(PhotoStorage.getInstance().colorStats);
+            colorPie.setupValues(PhotoStorage.colorStats);
             colorPie.repaint();
             colorPie.invalidate();
          }
