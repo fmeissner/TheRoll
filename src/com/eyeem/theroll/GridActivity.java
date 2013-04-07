@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.View;
+import android.widget.TextView;
 import com.eyeem.storage.Storage;
 import com.eyeem.theroll.activity.MenuActivity;
 import com.eyeem.theroll.model.Photo;
@@ -77,12 +78,17 @@ public class GridActivity extends MenuActivity implements View.OnClickListener {
       t.setPriority(Thread.MIN_PRIORITY);
       t.start();
 
-/*
+
       TextView gridLabel = (TextView)this.findViewById(R.id.gridheader);
       TextView gridLink = (TextView)this.findViewById(R.id.gridheaderlink);
-      if(!TextUtils.isEmpty(city)){
+      gridLink.setVisibility(View.INVISIBLE);
+      gridLabel.setVisibility(View.INVISIBLE);
+      if(query instanceof PhotoStorage.CityQuery){
          //link to city album - set label to city name accordingly
+         String city = ((PhotoStorage.CityQuery)query).city;
          gridLabel.setText("Photos taken in " + city);
+         gridLabel.setVisibility(View.VISIBLE);
+         gridLink.setVisibility(View.VISIBLE);
          if(city.equals("Berlin")){
             gridLink.setText("see more photos");
             gridheaderlink = "http://www.eyeem.com/a/17";
@@ -99,14 +105,18 @@ public class GridActivity extends MenuActivity implements View.OnClickListener {
             gridheaderlink = "http://www.eyeem.com/a/68633";
             gridLink.setText("see more photos");
          }
-      } else if (!TextUtils.isEmpty(timeOfDay)){
-         gridLabel.setText("Photos taken during the " + timeOfDay);
+      } else if (query instanceof PhotoStorage.TimeQuery) {
+         gridLabel.setText("Photos taken during the " + ((PhotoStorage.TimeQuery)query).timeOfDay);
+         gridLabel.setVisibility(View.VISIBLE);
          //set label to time of day
-      } else if (!TextUtils.isEmpty(color)){
+      } else if (query instanceof PhotoStorage.ColorQuery){
          //set label to color
-         gridLabel.setText("Photos with the color " + color);
+         gridLabel.setText("Photos with the color " + ((PhotoStorage.ColorQuery)query).color);
+         gridLabel.setVisibility(View.VISIBLE);
+      } else {
+        // blablablablablablablabalbalbalbalb
       }
-*/
+
    }
 
    @Override

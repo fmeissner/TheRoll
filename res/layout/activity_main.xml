@@ -9,7 +9,8 @@
         android:id="@+id/gridheader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
+        android:text=""
+        android:textColor = "#FFFFFF"/>
     <TextView
             android:id="@+id/gridheaderlink"
             android:layout_below="@id/gridheader"
