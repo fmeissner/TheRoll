@@ -3,6 +3,7 @@ package com.eyeem.theroll.widgets;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.widget.Toast;
 import com.eyeem.theroll.App;
 import com.eyeem.theroll.R;
 import com.eyeem.theroll.utils.AllColorsEver;
@@ -57,6 +58,10 @@ public class ColorPie extends GraphicalView {
       //setup.dataset.setTitle(null);
       int count = values.keySet().size();
       for (String colorName : values.keySet()) {
+         if (values.get(colorName) == null) {
+            Toast.makeText(getContext(), "Missing hex for "+colorName, Toast.LENGTH_LONG).show();
+            continue;
+         }
          inOrder.add(colorName);
          setup.dataset.add(colorName, values.get(colorName));
          SimpleSeriesRenderer r = new SimpleSeriesRenderer();
