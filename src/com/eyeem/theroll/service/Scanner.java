@@ -157,7 +157,7 @@ public class Scanner extends Service {
       try {
          photo.colors = colorQuery(filePath);
       } catch (Throwable e) {
-         Log.e(this, "scanPhotos colorQuery("+filePath+") error", e);
+         //Log.e(this, "scanPhotos colorQuery("+filePath+") error", e);
       }
       printPhoto(photo);
       return photo;

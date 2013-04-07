@@ -12,27 +12,18 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 import com.eyeem.storage.Storage;
+import com.eyeem.theroll.activity.MenuActivity;
 import com.eyeem.theroll.model.Photo;
 import com.eyeem.theroll.storage.PhotoStorage;
 import com.origamilabs.library.views.StaggeredGridView;
 
+import java.lang.ref.WeakReference;
 
-public class GridActivity extends Activity implements View.OnClickListener {
 
-   String city;
-   String timeOfDay;
-   String color;
+public class GridActivity extends MenuActivity implements View.OnClickListener {
 
-   public static void startWithQuery(String city, String timeOfDay, String color, Context context) {
-      Intent intent = new Intent(context, GridActivity.class);
-      if (!TextUtils.isEmpty(city))
-         intent.putExtra("city", city);
-      if (!TextUtils.isEmpty(timeOfDay))
-      intent.putExtra("timeOfDay", timeOfDay);
-      if (!TextUtils.isEmpty(color))
-         intent.putExtra("color", color);
-      context.startActivity(intent);
-   }
+   static WeakReference<GridActivity> _this;
+   StaggeredGridView gridView;
 
    private String urls[] = {
            "/storage/emulated/0/DCIM/Camera/IMG_20130403_145042.jpg",
@@ -195,14 +186,11 @@ public class GridActivity extends Activity implements View.OnClickListener {
     * look into a fix once I find extra time.
     */
    @Override
-   protected void onCreate(Bundle savedInstanceState) {
+   public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      city = getIntent().getStringExtra("city");
-      timeOfDay = getIntent().getStringExtra("timeOfDay");
-      color = getIntent().getStringExtra("color");
-      requestWindowFeature(Window.FEATURE_NO_TITLE);
+      _this = new WeakReference<GridActivity>(this);
       setContentView(R.layout.activity_main);
-      StaggeredGridView gridView = (StaggeredGridView) this.findViewById(R.id.staggeredGridView1);
+      gridView = (StaggeredGridView) this.findViewById(R.id.staggeredGridView1);
 
       int margin = getResources().getDimensionPixelSize(R.dimen.margin);
 
@@ -210,8 +198,22 @@ public class GridActivity extends Activity implements View.OnClickListener {
 
       gridView.setPadding(margin, 0, margin, 0); // have the margin on the sides as well
 
-      StaggeredAdapter adapter = new StaggeredAdapter(GridActivity.this, R.id.imageView1, getUrls());
+      reloadAdapter();
 
+   }
+
+   Storage.Query query;
+
+   public static void setQuery(Storage.Query query) {
+      GridActivity a = _this.get();
+      if (a == null)
+         return;
+      a.query = query;
+      a.reloadAdapter();
+   }
+
+   public void reloadAdapter() {
+      StaggeredAdapter adapter = new StaggeredAdapter(GridActivity.this, R.id.imageView1, getUrls());
       gridView.setAdapter(adapter);
       adapter.notifyDataSetChanged();
    }
@@ -231,33 +233,14 @@ public class GridActivity extends Activity implements View.OnClickListener {
 
    private String[] getUrls() {
 
-      Storage.Query<Photo> query = null;
-
-      if (!TextUtils.isEmpty(city)) {
-         query = new Storage.Query<Photo>() {
-            @Override
-            public boolean eval(Photo photo) {
-               return !TextUtils.isEmpty(photo.city) && photo.city.equals(city);
-            }
-         };
-      } else if (!TextUtils.isEmpty(timeOfDay)) {
-         query = new Storage.Query<Photo>() {
-            @Override
-            public boolean eval(Photo photo) {
-               return !TextUtils.isEmpty(photo.timeOfDay) && photo.timeOfDay.equals(timeOfDay);
-            }
-         };
-      } else if (!TextUtils.isEmpty(color)) {
-         query = new Storage.Query<Photo>() {
-            @Override
-            public boolean eval(Photo photo) {
-               return photo.colors != null && photo.colors.contains(color);
-            }
-         };
-      }
-
       if (query == null) {
-         return null;
+         query = new Storage.Query<Photo>() {
+            @Override
+            public boolean eval(Photo photo) {
+               // return all the photos
+               return true;
+            }
+         };
       }
 
       PhotoStorage.List list = PhotoStorage.getInstance().obtainList("grid");
