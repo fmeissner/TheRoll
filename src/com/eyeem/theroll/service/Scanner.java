@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import com.eyeem.theroll.model.Photo;
@@ -92,6 +91,11 @@ public class Scanner extends Service {
       while (cursor.moveToNext()) {
          String id = String.valueOf(cursor.getInt((cursor.getColumnIndex(MediaStore.Images.Media._ID))));
          String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+         if (PhotoStorage.getInstance().contains(id)) {
+            // already have this
+            // FIXME clear storage on model update
+            continue;
+         }
          Photo photo = process(filePath, id);
          Log.i(this,"filePath: "+photo.filePath);
          /*String width = cursor.getString(cursor.getColumnIndex("width"));
@@ -102,6 +106,10 @@ public class Scanner extends Service {
             photo.height = Integer.parseInt(height);*/
          if (photo != null) {
             storage.all().add(photo);
+         }
+         if (processedCount > 0 && processedCount % 20 == 0) {
+            // save photos every 20 pics
+            PhotoStorage.all().save();
          }
          processedCount++;
          if (processedCount > 150) {

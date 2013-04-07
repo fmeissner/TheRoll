@@ -2,25 +2,29 @@ package com.eyeem.theroll;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import com.eyeem.storage.Storage;
+import com.eyeem.theroll.storage.PhotoStorage;
 import com.eyeem.theroll.widgets.Cities;
 import com.eyeem.theroll.widgets.ColorPie;
 import com.eyeem.theroll.widgets.TimeOfADay;
 
-import java.util.HashMap;
-
-public class Dashboard extends Activity {
+public class Dashboard extends Activity implements Storage.Subscription {
 
    ScrollView scrollView;
    LinearLayout ll;
    TimeOfADay timeOfADay;
    Cities cities;
+   ColorPie colorPie;
+   Handler handler;
 
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       requestWindowFeature(Window.FEATURE_NO_TITLE);
+      handler = new Handler();
       scrollView = new ScrollView(this);
       ll = new LinearLayout(this);
       ll.setOrientation(LinearLayout.VERTICAL);
@@ -28,26 +32,8 @@ public class Dashboard extends Activity {
       scrollView.setBackgroundColor(getResources().getColor(R.color.bg));
 
       timeOfADay = new TimeOfADay(this);
-      timeOfADay.setValues(new int[]{23, 80, 55, 35});
-
       cities = new Cities(this);
-      HashMap<String, Integer> testCities = new HashMap<String, Integer>();
-      testCities.put("San Francisco", 124);
-      testCities.put("Berlin", 44);
-      testCities.put("London", 214);
-      testCities.put("Copenhagen", 34);
-      testCities.put("Łódź", 23);
-      testCities.put("Babylos", 27);
-      cities.setupValues(testCities);
-
-      ColorPie colorPie = new ColorPie(this);
-      HashMap<String, Integer> testColors = new HashMap<String, Integer>();
-      testColors.put("red", 33);
-      testColors.put("green", 33);
-      testColors.put("blue", 33);
-      testColors.put("magenta", 12);
-      colorPie.setupValues(testColors);
-
+      colorPie = new ColorPie(this);
 
       int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
       ll.addView(timeOfADay, -1, h);
@@ -72,5 +58,35 @@ public class Dashboard extends Activity {
             }
          }
       });*/
+   }
+
+   @Override
+   protected void onResume() {
+      super.onResume();
+      PhotoStorage.all().subscribe(this);
+      onUpdate(null);
+   }
+
+   @Override
+   protected void onPause() {
+      super.onPause();
+      PhotoStorage.all().unsubscribe(this);
+   }
+
+   @Override
+   public void onUpdate(Action action) {
+      handler.post(new Runnable() {
+         @Override
+         public void run() {
+            timeOfADay.setValues(PhotoStorage.getInstance().daysStats);
+            timeOfADay.repaint();
+
+            cities.setupValues(PhotoStorage.getInstance().cityStats);
+            cities.repaint();
+
+            colorPie.setupValues(PhotoStorage.getInstance().colorStats);
+            colorPie.repaint();
+         }
+      });
    }
 }
