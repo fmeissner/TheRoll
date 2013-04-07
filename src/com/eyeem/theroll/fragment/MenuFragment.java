@@ -48,6 +48,8 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
 
    @Override
    public void onUpdate(Action action) {
+      if (getSherlockActivity() == null)
+         return;
       try {
          handler.post(new Runnable() {
             @Override
@@ -79,7 +81,7 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
                   public void onClick(View v) {
                      PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
                      q.city = "Menlo Park";
-                     GridActivity.setQuery(null);
+                     GridActivity.setQuery(q);
                      hideMe();
                   }
                });
