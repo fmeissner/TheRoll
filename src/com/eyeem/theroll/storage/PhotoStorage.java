@@ -1,6 +1,7 @@
 package com.eyeem.theroll.storage;
 
 import android.content.Context;
+import android.text.TextUtils;
 import com.eyeem.storage.Storage;
 import com.eyeem.theroll.model.Photo;
 
@@ -87,5 +88,36 @@ public class PhotoStorage extends Storage<Photo> {
          }
       }
       super.addOrUpdate(id, object);
+   }
+
+   public static class ColorQuery implements Query<Photo> {
+
+      public String color;
+
+      @Override
+      public boolean eval(Photo photo) {
+         return photo.colors != null && photo.colors.contains(color);
+      }
+   }
+
+   public static class CityQuery implements Query<Photo> {
+
+      public String city;
+
+      @Override
+      public boolean eval(Photo photo) {
+         return !TextUtils.isEmpty(photo.city) && photo.city.equals(city);
+      }
+   }
+
+
+   public static class TimeQuery implements Query<Photo> {
+
+      public String timeOfDay;
+
+      @Override
+      public boolean eval(Photo photo) {
+         return !TextUtils.isEmpty(photo.timeOfDay) && photo.timeOfDay.equals(timeOfDay);
+      }
    }
 }

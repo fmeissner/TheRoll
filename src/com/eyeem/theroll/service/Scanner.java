@@ -175,10 +175,12 @@ public class Scanner extends Service {
       for (ColorResult res : colorResults) {
          for (ExtendedColor color : res.getInfo().getImageColors()) {
             Log.i(this, "scanPhotos closest parent: "+color.getClosestPaletteColorParent()+" w/ percent:"+color.getPercent());
-            if(color.getPercent()>20.0){
-               //TODO: this might actually be adding the same parent twice based on the child.
-               colorsInt.add(color.getClosestPaletteColorParent());
-               Log.i(this, "scanPhotos adding color: "+color.getClosestPaletteColorParent());
+            if(color.getPercent()>35.0){
+               if(!color.getClosestPaletteColorParent().equals("black") && !color.getClosestPaletteColorParent().equals("grey") && !color.getClosestPaletteColorParent().equals("white")){
+                  //TODO: this might actually be adding the same parent twice based on the child.
+                  colorsInt.add(color.getClosestPaletteColorParent());
+                  Log.i(this, "scanPhotos adding color: "+color.getClosestPaletteColorParent());
+               }
             }
          }
       }

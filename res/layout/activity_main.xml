@@ -3,13 +3,13 @@
     xmlns:staggered="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/bg"
     tools:context=".GridActivity" >
     <TextView
         android:id="@+id/gridheader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Happy TextView Header Fuck"/>
+        android:text=""/>
     <TextView
             android:id="@+id/gridheaderlink"
             android:layout_below="@id/gridheader"
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:onClick="onClick"
             android:clickable="true"
-            android:text = "See more photos in Menlo Park"
+            android:text = ""
             android:textColor = "#FFFFFF"/>
     <com.origamilabs.library.views.StaggeredGridView
         android:id="@+id/staggeredGridView1"

@@ -70,14 +70,10 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
                   if (seriesSelection == null) {
                      //Toast.makeText(Dashboard.this, "No chart element", Toast.LENGTH_SHORT).show();
                   } else {
-                     final String timeOfDay = new String[]{"Morning", "Afternoon", "Evening", "Night"}[(int) seriesSelection.getXValue() - 1];
                      // display information of the clicked point
-                     GridActivity.setQuery(new Storage.Query<Photo>() {
-                        @Override
-                        public boolean eval(Photo photo) {
-                           return !TextUtils.isEmpty(photo.timeOfDay) && photo.timeOfDay.equals(timeOfDay);
-                        }
-                     });
+                     PhotoStorage.TimeQuery q = new PhotoStorage.TimeQuery();
+                     q.timeOfDay = new String[]{"Morning", "Afternoon", "Evening", "Night"}[(int) seriesSelection.getXValue() - 1];
+                     GridActivity.setQuery(q);
                   }
                }
             });
@@ -93,13 +89,9 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
                      //Toast.makeText(Dashboard.this, "No chart element", Toast.LENGTH_SHORT).show();
                   } else {
                      // display information of the clicked point
-                     final String city = cities.inOrder.get((int)seriesSelection.getXValue());
-                     GridActivity.setQuery(new Storage.Query<Photo>() {
-                        @Override
-                        public boolean eval(Photo photo) {
-                           return !TextUtils.isEmpty(photo.city) && photo.city.equals(city);
-                        }
-                     });
+                     PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
+                     q.city = cities.inOrder.get((int)seriesSelection.getXValue());
+                     GridActivity.setQuery(q);
                   }
                }
             });
@@ -112,13 +104,9 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
                public void onClick(View v) {
                   SeriesSelection seriesSelection = colorPie.getCurrentSeriesAndPoint();
                   int index = seriesSelection.getPointIndex();
-                  final String color = colorPie.inOrder.get(index);
-                  GridActivity.setQuery(new Storage.Query<Photo>() {
-                     @Override
-                     public boolean eval(Photo photo) {
-                        return photo.colors != null && photo.colors.contains(color);
-                     }
-                  });
+                  PhotoStorage.ColorQuery q = new PhotoStorage.ColorQuery();
+                  q.color = colorPie.inOrder.get(index);
+                  GridActivity.setQuery(q);
                }
             });
          }
