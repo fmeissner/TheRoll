@@ -82,8 +82,8 @@ public class Scanner extends Service {
       Log.i(this, "scanPhotos");
       ContentResolver cr = getContentResolver();
       final String[] columns = {
-              MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA, MediaStore.Images.Media.TITLE, MediaStore.Images.Media.DATE_TAKEN,
-              MediaStore.Images.Media.SIZE, MediaStore.Images.Media.LATITUDE, MediaStore.Images.Media.LONGITUDE, "width", "height"
+              //MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA, MediaStore.Images.Media.TITLE, MediaStore.Images.Media.DATE_TAKEN,
+              //MediaStore.Images.Media.SIZE, MediaStore.Images.Media.LATITUDE, MediaStore.Images.Media.LONGITUDE, "width", "height"
       };
       Cursor cursor = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, null);
       cursor.moveToPosition(-1);
@@ -93,12 +93,12 @@ public class Scanner extends Service {
          String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
          Photo photo = process(filePath, id);
          Log.i(this,"filePath: "+photo.filePath);
-         String width = cursor.getString(cursor.getColumnIndex("width"));
+         /*String width = cursor.getString(cursor.getColumnIndex("width"));
          String height = cursor.getString(cursor.getColumnIndex("height"));
          if(width!=null)
             photo.width = Integer.parseInt(width);
          if(height!=null)
-            photo.height = Integer.parseInt(height);
+            photo.height = Integer.parseInt(height);*/
          if (photo != null) {
             storage.push(photo);
          }
