@@ -7,6 +7,7 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import com.eyeem.theroll.widgets.Cities;
 import com.eyeem.theroll.widgets.TimeOfADay;
 
 public class Dashboard extends Activity {
@@ -14,6 +15,7 @@ public class Dashboard extends Activity {
    ScrollView scrollView;
    LinearLayout ll;
    TimeOfADay timeOfADay;
+   Cities cities;
 
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -22,15 +24,16 @@ public class Dashboard extends Activity {
       ll = new LinearLayout(this);
       ll.setOrientation(LinearLayout.VERTICAL);
       scrollView.addView(ll, -1, -1);
+      scrollView.setBackgroundColor(R.color.bg);
 
       timeOfADay = new TimeOfADay(this);
-      timeOfADay.testSetup();
+      timeOfADay.setValues(new int[]{23, 80, 55, 35});
 
-      TextView tv = new TextView(this);
-      tv.setText("TEST");
+      cities = new Cities(this);
+      cities.testSetup();
 
       ll.addView(timeOfADay, -1, getResources().getDimensionPixelSize(R.dimen.graph_height));
-      ll.addView(tv, -1, -2);
+      ll.addView(cities, -1, getResources().getDimensionPixelSize(R.dimen.graph_height));
 
       setContentView(scrollView);
       /*mChartView.setOnClickListener(new View.OnClickListener() {
