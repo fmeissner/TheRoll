@@ -42,9 +42,10 @@ public class Dashboard extends Activity {
 
       ColorPie colorPie = new ColorPie(this);
       HashMap<String, Integer> testColors = new HashMap<String, Integer>();
-      testColors.put("red", 0xffff0000);
-      testColors.put("green", 0xff00ff00);
-      testColors.put("blue", 0xff0000ff);
+      testColors.put("red", 33);
+      testColors.put("green", 33);
+      testColors.put("blue", 33);
+      testColors.put("magenta", 12);
       colorPie.setupValues(testColors);
 
 
