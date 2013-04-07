@@ -99,8 +99,8 @@ public class ColorPie extends GraphicalView {
          }
 
          @Override
-         protected void drawLabel(Canvas canvas, String labelText, DefaultRenderer renderer, List<RectF> prevLabelsBounds, int centerX, int centerY, float shortRadius, float longRadius, float currentAngle, float angle, int left, int right, int color, Paint paint) {
-            //super.drawLabel(canvas, labelText, renderer, prevLabelsBounds, centerX, centerY, shortRadius, longRadius, currentAngle, angle, left, right, color, paint);    //To change body of overridden methods use File | Settings | File Templates.
+         protected void drawLabel(Canvas canvas, String labelText, DefaultRenderer renderer, List<RectF> prevLabelsBounds, int centerX, int centerY, float shortRadius, float longRadius, float currentAngle, float angle, int left, int right, int color, Paint paint, boolean line, boolean display) {
+            // super.drawLabel(canvas, labelText, renderer, prevLabelsBounds, centerX, centerY, shortRadius, longRadius, currentAngle, angle, left, right, color, paint, line, display);    //To change body of overridden methods use File | Settings | File Templates.
          }
       };
       return s;

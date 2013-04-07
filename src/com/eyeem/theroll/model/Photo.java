@@ -15,6 +15,7 @@ public class Photo {
    public ArrayList<String> colors = new ArrayList<String>();
    public String day;
    public String timeOfDay;
+   public long timestamp;
    public int width;
    public int height;
    public String filePath;

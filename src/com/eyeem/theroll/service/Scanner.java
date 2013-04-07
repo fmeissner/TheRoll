@@ -225,6 +225,7 @@ public class Scanner extends Service {
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
+      photo.timestamp = convertedDate.getTime();
       dateFormat.applyPattern("EEEE");
       photo.day = dateFormat.format(convertedDate);
       dateFormat.applyPattern("HH");

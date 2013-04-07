@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.eyeem.storage.Storage;
 import com.eyeem.theroll.GridActivity;
 import com.eyeem.theroll.R;
-import com.eyeem.theroll.model.Photo;
 import com.eyeem.theroll.storage.PhotoStorage;
 import com.eyeem.theroll.widgets.Cities;
 import com.eyeem.theroll.widgets.ColorPie;
@@ -58,12 +56,18 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
             final ColorPie colorPie = new ColorPie(ctx);
 
             int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
-            ll.addView(prepareText("TIME OF A DAY"));
+            ll.addView(prepareText("- LATEST", 0xff2cddd4));
+            separator(ll);
+            ll.addView(prepareText("- AROUND YOU", 0xff2cddd4));
+            separator(ll);
+            ll.addView(prepareText("TIME OF A DAY", 0xff555555));
             ll.addView(timeOfADay, -1, h);
-            ll.addView(prepareText("CITIES"));
+            ll.addView(prepareText("CITIES", 0xff555555));
             ll.addView(cities, -1, h);
-            ll.addView(prepareText("COLORS"));
+            ll.addView(prepareText("COLORS", 0xff555555));
             ll.addView(colorPie, -1, h);
+            int p = (int)getSherlockActivity().getResources().getDimension(R.dimen.label_text_size);
+            ll.setPadding(p, 0, p, 0);
 
             timeOfADay.setValues(PhotoStorage.daysStats);
             timeOfADay.repaint();
@@ -118,13 +122,19 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
       });
    }
 
-   private TextView prepareText(String text) {
+   private TextView prepareText(String text, int color) {
       TextView tv = new TextView(getSherlockActivity());
       tv.setText(text);
       tv.setTypeface(Typeface.DEFAULT_BOLD);
-      tv.setTextColor(0xff555555);
-      tv.setPadding((int)getSherlockActivity().getResources().getDimensionPixelSize(R.dimen.paddin_left_text), 0, 0, 0);
+      tv.setTextColor(color);
+      //tv.setPadding((int)getSherlockActivity().getResources().getDimensionPixelSize(R.dimen.paddin_left_text), 0, 0, 0);
       return tv;
+   }
+
+   private void separator(LinearLayout ll) {
+      View view  = new View(getSherlockActivity());
+      view.setBackgroundColor(0xffc19c33);
+      ll.addView(view, -1, 3);
    }
 
    @Override

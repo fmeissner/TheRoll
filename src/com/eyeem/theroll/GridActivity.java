@@ -155,6 +155,7 @@ public class GridActivity extends MenuActivity implements View.OnClickListener {
       }
 
       PhotoStorage.List list = PhotoStorage.getInstance().obtainList("grid");
+      list.enableSort(PhotoStorage.comparator);
       list.setQuery(query);
       list.reloadQuery();
 

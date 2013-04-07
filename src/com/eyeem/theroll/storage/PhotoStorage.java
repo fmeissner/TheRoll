@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.eyeem.storage.Storage;
 import com.eyeem.theroll.model.Photo;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -37,6 +38,7 @@ public class PhotoStorage extends Storage<Photo> {
          sInstance.init(1000);
          all = sInstance.obtainList("all");
          all.setTrimSize(1000);
+         all.enableSort(comparator);
       }
    }
 
@@ -120,4 +122,12 @@ public class PhotoStorage extends Storage<Photo> {
          return !TextUtils.isEmpty(photo.timeOfDay) && photo.timeOfDay.equals(timeOfDay);
       }
    }
+
+   public static Comparator<Photo> comparator = new Comparator<Photo>() {
+
+      @Override
+      public int compare(Photo lhs, Photo rhs) {
+         return (int)(lhs.timestamp - rhs.timestamp);
+      }
+   };
 }
