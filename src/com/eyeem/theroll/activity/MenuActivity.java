@@ -2,6 +2,8 @@ package com.eyeem.theroll.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 import com.eyeem.theroll.R;
@@ -31,13 +33,21 @@ public class MenuActivity extends Activity {
       // customize the SlidingMenu
       this.setSlidingActionBarEnabled(true);
 
-      // getSlidingMenu().setShadowWidthRes(R.dimen.shadow_width);
-      // getSlidingMenu().setShadowDrawable(R.drawable.shadow);
+      getSlidingMenu().setShadowWidthRes(R.dimen.shadow_width);
+      getSlidingMenu().setShadowDrawable(R.drawable.shadow);
       getSlidingMenu().setBehindOffsetRes(R.dimen.actionbar_home_width);
       getSlidingMenu().setBehindScrollScale(0.25f);
 
-      //getSherlock().getActionBar().setIcon(R.drawable.actionbar_clock);
+      getSherlock().getActionBar().setIcon(R.drawable.sidebar);
       getSherlock().getActionBar().setHomeButtonEnabled(true);
+      getSherlock().getActionBar().setTitle(null);
+      getSupportActionBar().setDisplayShowCustomEnabled(true);
+      RelativeLayout rl = new RelativeLayout(this);
+      ImageView iv = new ImageView(this);
+      iv.setImageResource(R.drawable.topbarlogo);
+      rl.addView(iv, -1, -2);
+      ((RelativeLayout.LayoutParams)iv.getLayoutParams()).addRule(RelativeLayout.CENTER_IN_PARENT);
+      getSherlock().getActionBar().setCustomView(rl);
    }
 
    @Override

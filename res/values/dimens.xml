@@ -3,4 +3,6 @@
     <dimen name="graph_height">250dp</dimen>
     <dimen name="label_text_size">14dp</dimen>
     <dimen name="actionbar_home_width">60dp</dimen>
+    <dimen name="shadow_width">15dp</dimen>
+    <dimen name="actionbar_height">50dip</dimen>
 </resources> 

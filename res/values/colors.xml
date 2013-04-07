@@ -4,5 +4,7 @@
     <color name="black">#FF000000</color>
     <color name="bg">#ff282d2c</color>
     <color name="blueish">#ff2cddd4</color>
+    <color name="actionbar_background_start">#1E2120</color>
+    <color name="actionbar_background_end">#1E2120</color>
 
 </resources>
