@@ -1,28 +1,18 @@
 package com.eyeem.theroll;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 
+import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import com.origamilabs.library.views.StaggeredGridView;
 
-/**
- *
- * This will not work so great since the heights of the imageViews 
- * are calculated on the iamgeLoader callback ruining the offsets. To fix this try to get 
- * the (intrinsic) image width and height and set the views height manually. I will
- * look into a fix once I find extra time.
- *
- * @author Maurycy Wojtowicz
- *
- */
-public class GridActivity extends Activity {
 
-   /**
-    * Images are taken by Romain Guy ! He's a great photographer as well as a
-    * great programmer. http://www.flickr.com/photos/romainguy
-    */
+public class GridActivity extends Activity implements View.OnClickListener {
 
    private String urls[] = {
            "/storage/emulated/0/DCIM/Camera/IMG_20130403_145042.jpg",
@@ -177,6 +167,7 @@ public class GridActivity extends Activity {
            "/storage/emulated/0/DCIM/Camera/2012-09-23 02.36.15.jpg",
            "/storage/emulated/0/DCIM/Camera/2012-09-23 02.36.30.jpg"
    };
+   String gridheaderlink = "http://www.eyeem.com/a/radius:37.48218536:-122.15003967";
    /**
     * This will not work so great since the heights of the imageViews
     * are calculated on the iamgeLoader callback ruining the offsets. To fix this try to get
@@ -200,5 +191,17 @@ public class GridActivity extends Activity {
 
       gridView.setAdapter(adapter);
       adapter.notifyDataSetChanged();
+   }
+   @Override
+   public void onClick(View v) {
+      switch (v.getId()) {
+         case R.id.gridheaderlink:
+            //TODO: open city album instead of radius
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(gridheaderlink));
+            startActivity(i);
+            break;
+         default:
+            break;
+      }
    }
 }

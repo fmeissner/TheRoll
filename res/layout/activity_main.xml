@@ -10,10 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Happy TextView Header Fuck"/>
+    <TextView
+            android:id="@+id/gridheaderlink"
+            android:layout_below="@id/gridheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:clickable="true"
+            android:text = "See more photos in Menlo Park"
+            android:textColor = "#FFFFFF"/>
     <com.origamilabs.library.views.StaggeredGridView
         android:id="@+id/staggeredGridView1"
-        android:layout_below="@id/gridheader"
-        staggered:numColumns="3"
+        android:layout_below="@id/gridheaderlink"
+        staggered:numColumns="2"
         staggered:drawSelectorOnTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

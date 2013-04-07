@@ -12,14 +12,15 @@
     <uses-sdk android:minSdkVersion="8"/>
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher"
                  android:name=".App">
-        <activity android:name=".Dashboard"
+        <activity android:name=".Dashboard" android:screenOrientation="portrait"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
+        <activity android:name=".PhotoActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GridActivity" android:screenOrientation="portrait" />
         <service android:name=".service.Scanner"/>
     </application>
 </manifest>
