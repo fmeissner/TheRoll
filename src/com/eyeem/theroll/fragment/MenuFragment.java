@@ -19,6 +19,7 @@ import com.eyeem.theroll.storage.PhotoStorage;
 import com.eyeem.theroll.widgets.Cities;
 import com.eyeem.theroll.widgets.ColorPie;
 import com.eyeem.theroll.widgets.TimeOfADay;
+import com.slidingmenu.lib.app.SlidingFragmentActivity;
 import org.achartengine.model.SeriesSelection;
 
 /**
@@ -47,106 +48,114 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
 
    @Override
    public void onUpdate(Action action) {
-      handler.post(new Runnable() {
-         @Override
-         public void run() {
-            final Context ctx = getSherlockActivity();
-            ll.removeAllViews();
-            final TimeOfADay timeOfADay = new TimeOfADay(ctx);
-            final Cities cities = new Cities(ctx);
-            final ColorPie colorPie = new ColorPie(ctx);
+      try {
+         handler.post(new Runnable() {
+            @Override
+            public void run() {
+               final Context ctx = getSherlockActivity();
+               ll.removeAllViews();
+               final TimeOfADay timeOfADay = new TimeOfADay(ctx);
+               final Cities cities = new Cities(ctx);
+               final ColorPie colorPie = new ColorPie(ctx);
 
-            int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
-            ll.addView(prepareText("- LATEST", 0xff2cddd4));
-            ImageView iv = new ImageView(getSherlockActivity());
-            iv.setImageResource(R.drawable.live);
-            iv.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                  GridActivity.setQuery(null);
-               }
-            });
-            ll.addView(iv, -2, -2);
-            separator(ll);
-            ll.addView(prepareText("- AROUND YOU", 0xff2cddd4));
-            iv = new ImageView(getSherlockActivity());
-            iv.setImageResource(R.drawable.aroundyou);
-            iv.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                  PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
-                  q.city = "Menlo Park";
-                  GridActivity.setQuery(null);
-               }
-            });
-            ll.addView(iv, -2, -2);
-            separator(ll);
-            ll.addView(prepareText("TIME OF A DAY", 0xff555555));
-            ll.addView(timeOfADay, -1, h);
-            ll.addView(prepareText("CITIES", 0xff555555));
-            ll.addView(cities, -1, h);
-            ll.addView(prepareText("COLORS", 0xff555555));
-            ll.addView(colorPie, -1, h);
-            int p = (int)getSherlockActivity().getResources().getDimension(R.dimen.label_text_size);
-            ll.setPadding(p, 0, p, 0);
-
-            timeOfADay.setValues(PhotoStorage.daysStats);
-            timeOfADay.repaint();
-            timeOfADay.invalidate();
-            timeOfADay.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                  final SeriesSelection seriesSelection = timeOfADay.getCurrentSeriesAndPoint();
-                  if (seriesSelection == null) {
-                     //Toast.makeText(Dashboard.this, "No chart element", Toast.LENGTH_SHORT).show();
-                  } else {
-                     // display information of the clicked point
-                     PhotoStorage.TimeQuery q = new PhotoStorage.TimeQuery();
-                     q.timeOfDay = new String[]{"Morning", "Afternoon", "Evening", "Night"}[(int) seriesSelection.getXValue() - 1];
-                     GridActivity.setQuery(q);
+               int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
+               ll.addView(prepareText("- LATEST", 0xff2cddd4));
+               ImageView iv = new ImageView(getSherlockActivity());
+               iv.setImageResource(R.drawable.live);
+               iv.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                     GridActivity.setQuery(null);
+                     hideMe();
                   }
-               }
-            });
+               });
+               ll.addView(iv, -2, -2);
+               separator(ll);
+               ll.addView(prepareText("- AROUND YOU", 0xff2cddd4));
+               iv = new ImageView(getSherlockActivity());
+               iv.setImageResource(R.drawable.aroundyou);
+               iv.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                     PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
+                     q.city = "Menlo Park";
+                     GridActivity.setQuery(null);
+                     hideMe();
+                  }
+               });
+               ll.addView(iv, -2, -2);
+               separator(ll);
+               ll.addView(prepareText("TIME OF A DAY", 0xff555555));
+               ll.addView(timeOfADay, -1, h);
+               ll.addView(prepareText("CITIES", 0xff555555));
+               ll.addView(cities, -1, h);
+               ll.addView(prepareText("COLORS", 0xff555555));
+               ll.addView(colorPie, -1, h);
+               int p = (int) getSherlockActivity().getResources().getDimension(R.dimen.label_text_size);
+               ll.setPadding(p, 0, p, 0);
 
-            cities.setupValues(PhotoStorage.cityStats);
-            cities.repaint();
-            cities.invalidate();
-            cities.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                  try {
-                     final SeriesSelection seriesSelection = cities.getCurrentSeriesAndPoint();
+               timeOfADay.setValues(PhotoStorage.daysStats);
+               timeOfADay.repaint();
+               timeOfADay.invalidate();
+               timeOfADay.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                     final SeriesSelection seriesSelection = timeOfADay.getCurrentSeriesAndPoint();
                      if (seriesSelection == null) {
                         //Toast.makeText(Dashboard.this, "No chart element", Toast.LENGTH_SHORT).show();
                      } else {
                         // display information of the clicked point
-                        PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
-                        q.city = cities.inOrder.get((int) seriesSelection.getXValue());
+                        PhotoStorage.TimeQuery q = new PhotoStorage.TimeQuery();
+                        q.timeOfDay = new String[]{"Morning", "Afternoon", "Evening", "Night"}[(int) seriesSelection.getXValue() - 1];
                         GridActivity.setQuery(q);
+                        hideMe();
                      }
-                  } catch (NullPointerException npe) {
                   }
-               }
-            });
+               });
 
-            colorPie.setupValues(PhotoStorage.colorStats);
-            colorPie.repaint();
-            colorPie.invalidate();
-            colorPie.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                  try {
-                     SeriesSelection seriesSelection = colorPie.getCurrentSeriesAndPoint();
-                     int index = seriesSelection.getPointIndex();
-                     PhotoStorage.ColorQuery q = new PhotoStorage.ColorQuery();
-                     q.color = colorPie.inOrder.get(index);
-                     GridActivity.setQuery(q);
-                  } catch (NullPointerException npe) {
+               cities.setupValues(PhotoStorage.cityStats);
+               cities.repaint();
+               cities.invalidate();
+               cities.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                     try {
+                        final SeriesSelection seriesSelection = cities.getCurrentSeriesAndPoint();
+                        if (seriesSelection == null) {
+                           //Toast.makeText(Dashboard.this, "No chart element", Toast.LENGTH_SHORT).show();
+                        } else {
+                           // display information of the clicked point
+                           PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
+                           q.city = cities.inOrder.get((int) seriesSelection.getXValue());
+                           GridActivity.setQuery(q);
+                           hideMe();
+                        }
+                     } catch (NullPointerException npe) {
+                     }
                   }
-               }
-            });
-         }
-      });
+               });
+
+               colorPie.setupValues(PhotoStorage.colorStats);
+               colorPie.repaint();
+               colorPie.invalidate();
+               colorPie.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                     try {
+                        SeriesSelection seriesSelection = colorPie.getCurrentSeriesAndPoint();
+                        int index = seriesSelection.getPointIndex();
+                        PhotoStorage.ColorQuery q = new PhotoStorage.ColorQuery();
+                        q.color = colorPie.inOrder.get(index);
+                        GridActivity.setQuery(q);
+                        hideMe();
+                     } catch (NullPointerException npe) {
+                     }
+                  }
+               });
+            }
+         });
+      } catch (NullPointerException npe) {
+      }
    }
 
    private TextView prepareText(String text, int color) {
@@ -175,5 +184,9 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
    public void onPause() {
       super.onPause();
       PhotoStorage.all.unsubscribe(this);
+   }
+
+   public void hideMe() {
+      ((SlidingFragmentActivity) getActivity()).getSlidingMenu().showAbove();
    }
 }

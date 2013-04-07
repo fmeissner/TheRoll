@@ -127,7 +127,7 @@ public class PhotoStorage extends Storage<Photo> {
 
       @Override
       public int compare(Photo lhs, Photo rhs) {
-         return (int)(- lhs.timestamp + rhs.timestamp);
+         return (int)(lhs.timestamp - rhs.timestamp);
       }
    };
 }
