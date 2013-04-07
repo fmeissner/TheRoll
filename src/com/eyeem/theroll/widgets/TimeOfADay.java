@@ -53,6 +53,7 @@ public class TimeOfADay extends GraphicalView {
       setup.renderer.setXAxisMin(0.5);
       setup.renderer.setXAxisMax(4.5);
       setup.renderer.setYAxisMin(0);
+      setup.renderer.setInScroll(true);
       int max = 0;
       for (int i = 0; i<values.length; i++) {
          if (values[i] > max)
