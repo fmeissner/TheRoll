@@ -3,6 +3,7 @@ package com.eyeem.theroll.widgets;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import com.eyeem.theroll.App;
 import com.eyeem.theroll.R;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.CubicLineChart;
@@ -42,7 +43,7 @@ public class TimeOfADay extends GraphicalView {
       setup.currentRenderer.setLineWidth(4);
       setup.currentRenderer.setPointStyle(PointStyle.CIRCLE);
       setup.currentRenderer.setColor(getResources().getColor(R.color.blueish));
-      setup.renderer.setLabelsTextSize(20);
+      setup.renderer.setLabelsTextSize(getResources().getDimension(R.dimen.label_text_size));
       setup.renderer.addXTextLabel(1, "morning");
       setup.renderer.addXTextLabel(2, "afternoon");
       setup.renderer.addXTextLabel(3, "evening");
@@ -78,6 +79,7 @@ public class TimeOfADay extends GraphicalView {
       s.renderer.setClickEnabled(true);
       s.renderer.setZoomEnabled(false, false);
       s.renderer.setPanEnabled(false, false);
+      s.renderer.setMarginsColor(App.the.getResources().getColor(R.color.bg));
       s.chart = new CubicLineChart(s.dataset, s.renderer, 0.2f) {
          @Override
          protected int drawLegend(Canvas canvas, DefaultRenderer renderer, String[] titles, int left, int right, int y, int width, int height, int legendSize, Paint paint, boolean calculate) {

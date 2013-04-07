@@ -2,7 +2,10 @@ package com.eyeem.theroll.widgets;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import com.eyeem.theroll.App;
+import com.eyeem.theroll.R;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart;
 import org.achartengine.model.XYMultipleSeriesDataset;
@@ -10,6 +13,8 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
+
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,6 +26,7 @@ import org.achartengine.renderer.XYSeriesRenderer;
 public class Cities extends GraphicalView {
 
    ChartSetup setup;
+   HashMap<String, Integer> values;
 
    public Cities(Context context, ChartSetup setup) {
       super(context, setup.chart);
@@ -31,15 +37,27 @@ public class Cities extends GraphicalView {
       this(context, initChart());
    }
 
-   public final static String[] LABELS = {"Morning", "Afternoon", "Evening", "Night"};
-
-   public void testSetup() {
+   public void setupValues(HashMap<String, Integer> values) {
+      this.values = values;
       setup.currentSeries.setTitle(null);
-      setup.currentSeries.add(1, 2);
-      setup.currentSeries.add(2, 3);
-      setup.currentSeries.add(3, 2);
-      setup.currentSeries.add(4, 5);
-      setup.currentSeries.add(5, 4);
+      int count = values.keySet().size();
+      int max = 0;
+      int i = 0;
+      for (String cityName : values.keySet()) {
+         if (max < values.get(cityName))
+            max = values.get(cityName);
+         setup.currentSeries.add(i, values.get(cityName));
+         setup.renderer.addXTextLabel(i, cityName);
+         i++;
+      }
+      setup.renderer.setXLabels(0);
+      setup.renderer.setYLabels(0);
+      setup.renderer.setXAxisMin(-0.5);
+      setup.renderer.setXAxisMax(count-0.5);
+      setup.renderer.setYAxisMin(0);
+      setup.renderer.setYAxisMax(max * 1.5);
+      setup.currentRenderer.setColor(getResources().getColor(R.color.blueish));
+      setup.renderer.setLabelsTextSize(getResources().getDimension(R.dimen.label_text_size)*0.66f);
       repaint();
    }
 
@@ -65,6 +83,7 @@ public class Cities extends GraphicalView {
       s.renderer.setYAxisMin(0);
       s.renderer.setYAxisMax(5);
       s.renderer.setBarSpacing(0.7);
+      s.renderer.setMarginsColor(App.the.getResources().getColor(R.color.bg));
       s.chart = new BarChart(s.dataset, s.renderer, BarChart.Type.DEFAULT) {
          @Override
          protected int drawLegend(Canvas canvas, DefaultRenderer renderer, String[] titles, int left, int right, int y, int width, int height, int legendSize, Paint paint, boolean calculate) {

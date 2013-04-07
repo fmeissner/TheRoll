@@ -1,14 +1,14 @@
 package com.eyeem.theroll;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import com.eyeem.theroll.widgets.Cities;
 import com.eyeem.theroll.widgets.TimeOfADay;
+
+import java.util.HashMap;
 
 public class Dashboard extends Activity {
 
@@ -24,13 +24,20 @@ public class Dashboard extends Activity {
       ll = new LinearLayout(this);
       ll.setOrientation(LinearLayout.VERTICAL);
       scrollView.addView(ll, -1, -1);
-      scrollView.setBackgroundColor(R.color.bg);
+      scrollView.setBackgroundColor(getResources().getColor(R.color.bg));
 
       timeOfADay = new TimeOfADay(this);
       timeOfADay.setValues(new int[]{23, 80, 55, 35});
 
       cities = new Cities(this);
-      cities.testSetup();
+      HashMap<String, Integer> testCities = new HashMap<String, Integer>();
+      testCities.put("San Francisco", 124);
+      testCities.put("Berlin", 44);
+      testCities.put("London", 214);
+      testCities.put("Copenhagen", 34);
+      testCities.put("Łódź", 23);
+      testCities.put("Babylos", 27);
+      cities.setupValues(testCities);
 
       ll.addView(timeOfADay, -1, getResources().getDimensionPixelSize(R.dimen.graph_height));
       ll.addView(cities, -1, getResources().getDimensionPixelSize(R.dimen.graph_height));
