@@ -12,10 +12,12 @@ import java.util.ArrayList;
 public class Photo {
    public String city;
    public String country;
-   public ArrayList<Integer> colors = new ArrayList<Integer>();
-   public int day;
+   public ArrayList<String> colors = new ArrayList<String>();
+   public String day;
+   public String timeOfDay;
+   public int width;
+   public int height;
    public String filePath;
-   public long time;
    public double lat;
    public double lon;
    public String id;
