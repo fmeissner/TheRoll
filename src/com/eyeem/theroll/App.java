@@ -2,9 +2,11 @@ package com.eyeem.theroll;
 
 import android.app.Application;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import com.eyeem.storage.Storage;
 import com.eyeem.theroll.service.Scanner;
 import com.eyeem.theroll.storage.PhotoStorage;
+import org.achartengine.chart.ScatterChart;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,5 +38,7 @@ public class App extends Application {
          }
       });
       PhotoStorage.all.load();
+
+      ScatterChart.circle = BitmapFactory.decodeResource(getResources(), R.drawable.point);
    }
 }

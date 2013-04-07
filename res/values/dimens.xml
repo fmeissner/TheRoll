@@ -6,4 +6,5 @@
     <dimen name="shadow_width">15dp</dimen>
     <dimen name="actionbar_height">50dip</dimen>
     <dimen name="paddin_left_text">16dip</dimen>
+    <dimen name="paddin_menu">8dip</dimen>
 </resources> 

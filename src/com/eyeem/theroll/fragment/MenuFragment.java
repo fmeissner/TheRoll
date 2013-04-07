@@ -61,7 +61,11 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
                final ColorPie colorPie = new ColorPie(ctx);
 
                int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
-               ll.addView(prepareText("- LATEST", 0xff2cddd4));
+               int h8 = getResources().getDimensionPixelSize(R.dimen.paddin_menu); // 8dip
+               int h4 = h8/2;
+               spacing(ll, h8);
+               ll.addView(prepareText("LATEST", 0xff2cddd4));
+               spacing(ll, h8);
                ImageView iv = new ImageView(getSherlockActivity());
                iv.setImageResource(R.drawable.live);
                iv.setOnClickListener(new View.OnClickListener() {
@@ -72,8 +76,11 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
                   }
                });
                ll.addView(iv, -2, -2);
+               spacing(ll, h4);
                separator(ll);
-               ll.addView(prepareText("- AROUND YOU", 0xff2cddd4));
+               spacing(ll, h8);
+               ll.addView(prepareText("AROUND YOU", 0xff2cddd4));
+               spacing(ll, h8);
                iv = new ImageView(getSherlockActivity());
                iv.setImageResource(R.drawable.aroundyou);
                iv.setOnClickListener(new View.OnClickListener() {
@@ -86,12 +93,19 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
                   }
                });
                ll.addView(iv, -2, -2);
+               spacing(ll, h4);
                separator(ll);
-               ll.addView(prepareText("TIME OF A DAY", 0xff555555));
+               spacing(ll, h8);
+               ll.addView(prepareText("TIME OF DAY", 0xff555555));
+               spacing(ll, h4);
                ll.addView(timeOfADay, -1, h);
+               spacing(ll, h8);
                ll.addView(prepareText("CITIES", 0xff555555));
+               spacing(ll, h4);
                ll.addView(cities, -1, h);
+               spacing(ll, h8);
                ll.addView(prepareText("COLORS", 0xff555555));
+               spacing(ll, h4);
                ll.addView(colorPie, -1, h);
                int p = (int) getSherlockActivity().getResources().getDimension(R.dimen.label_text_size);
                ll.setPadding(p, 0, p, 0);
@@ -190,5 +204,11 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
 
    public void hideMe() {
       ((SlidingFragmentActivity) getActivity()).getSlidingMenu().showAbove();
+   }
+
+   public void spacing(LinearLayout ll, int size) {
+      View view = new View(getSherlockActivity());
+      ll.addView(view, -1, -2);
+      view.getLayoutParams().height = size;
    }
 }
