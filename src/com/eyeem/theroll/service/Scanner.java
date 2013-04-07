@@ -92,13 +92,18 @@ public class Scanner extends Service {
          String id = String.valueOf(cursor.getInt((cursor.getColumnIndex(MediaStore.Images.Media._ID))));
          String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
          Photo photo = process(filePath, id);
-         photo.width = Integer.parseInt(cursor.getString(cursor.getColumnIndex("width")));
-         photo.height = Integer.parseInt(cursor.getString(cursor.getColumnIndex("height")));
+         Log.i(this,"filePath: "+photo.filePath);
+         String width = cursor.getString(cursor.getColumnIndex("width"));
+         String height = cursor.getString(cursor.getColumnIndex("height"));
+         if(width!=null)
+            photo.width = Integer.parseInt(width);
+         if(height!=null)
+            photo.height = Integer.parseInt(height);
          if (photo != null) {
             storage.push(photo);
          }
          processedCount++;
-         if (processedCount > 1) {
+         if (processedCount > 150) {
             // TMP
             break;
          }
