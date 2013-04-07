@@ -6,6 +6,7 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import com.eyeem.theroll.widgets.Cities;
+import com.eyeem.theroll.widgets.ColorPie;
 import com.eyeem.theroll.widgets.TimeOfADay;
 
 import java.util.HashMap;
@@ -39,8 +40,18 @@ public class Dashboard extends Activity {
       testCities.put("Babylos", 27);
       cities.setupValues(testCities);
 
-      ll.addView(timeOfADay, -1, getResources().getDimensionPixelSize(R.dimen.graph_height));
-      ll.addView(cities, -1, getResources().getDimensionPixelSize(R.dimen.graph_height));
+      ColorPie colorPie = new ColorPie(this);
+      HashMap<String, Integer> testColors = new HashMap<String, Integer>();
+      testColors.put("red", 0xffff0000);
+      testColors.put("green", 0xff00ff00);
+      testColors.put("blue", 0xff0000ff);
+      colorPie.setupValues(testColors);
+
+
+      int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
+      ll.addView(timeOfADay, -1, h);
+      ll.addView(cities, -1, h);
+      ll.addView(colorPie, -1, h);
 
       setContentView(scrollView);
       /*mChartView.setOnClickListener(new View.OnClickListener() {
