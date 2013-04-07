@@ -14,6 +14,7 @@ import com.origamilabs.library.views.StaggeredGridView;
 import staggeredgridviewdemo.loader.ImageLoader;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 
 public class GridActivity extends MenuActivity implements View.OnClickListener {
@@ -22,6 +23,7 @@ public class GridActivity extends MenuActivity implements View.OnClickListener {
    StaggeredGridView gridView;
    String gridheaderlink = "http://www.eyeem.com";
    private ImageLoader loader;
+   StaggeredAdapter adapter;
 
    /**
     * This will not work so great since the heights of the imageViews
@@ -43,9 +45,9 @@ public class GridActivity extends MenuActivity implements View.OnClickListener {
 
       gridView.setPadding(margin, 0, margin, 0); // have the margin on the sides as well
 
-      StaggeredAdapter adapter = new StaggeredAdapter(GridActivity.this, R.id.imageView1, getUrls(), loader);
+      adapter = new StaggeredAdapter(GridActivity.this, loader);
       gridView.setAdapter(adapter);
-      adapter.notifyDataSetChanged();
+      adapter.setPhotos(getUrls());
 
    }
 
@@ -55,28 +57,18 @@ public class GridActivity extends MenuActivity implements View.OnClickListener {
       final GridActivity a = _this.get();
       if (a == null)
          return;
-      a.query = query;
-      a.reloadAdapter();
-
+      a.reloadAdapter(query);
    }
 
 
-   public void reloadAdapter() {
-      Thread t = new Thread(new Runnable() {
+   public void reloadAdapter(PhotoStorage.Query query) {
+      this.query = query;
+      gridView.post(new Runnable() {
          @Override
          public void run() {
-            final StaggeredAdapter adapter = new StaggeredAdapter(GridActivity.this, R.id.imageView1, getUrls(), loader);
-            gridView.post(new Runnable() {
-               @Override
-               public void run() {
-                  gridView.setAdapter(adapter);
-                  adapter.notifyDataSetChanged();
-               }
-            });
+            adapter.setPhotos(getUrls());
          }
       });
-      t.setPriority(Thread.MIN_PRIORITY);
-      t.start();
 
 
       TextView gridLabel = (TextView)this.findViewById(R.id.gridheader);
@@ -131,7 +123,7 @@ public class GridActivity extends MenuActivity implements View.OnClickListener {
       }
    }
 
-   private Photo[] getUrls() {
+   private ArrayList<Photo> getUrls() {
 
       if (query == null) {
 /*      Storage.Query<Photo> query = null;
@@ -169,12 +161,6 @@ public class GridActivity extends MenuActivity implements View.OnClickListener {
       list.setQuery(query);
       list.reloadQuery();
 
-      Photo[] urls = new Photo[list.size()];
-      try {
-         for (int i = 0; i < urls.length; i++) {
-            urls[i] = list.get(i);
-         }
-      } catch (Throwable w) {/*best coding ever!*/}
-      return urls;
+      return list.toArrayList(list.size());
    }
 }

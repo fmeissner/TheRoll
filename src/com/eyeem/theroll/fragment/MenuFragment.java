@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -57,8 +58,28 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
 
             int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
             ll.addView(prepareText("- LATEST", 0xff2cddd4));
+            ImageView iv = new ImageView(getSherlockActivity());
+            iv.setImageResource(R.drawable.live);
+            iv.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                  GridActivity.setQuery(null);
+               }
+            });
+            ll.addView(iv, -2, -2);
             separator(ll);
             ll.addView(prepareText("- AROUND YOU", 0xff2cddd4));
+            iv = new ImageView(getSherlockActivity());
+            iv.setImageResource(R.drawable.aroundyou);
+            iv.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                  PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
+                  q.city = "Menlo Park";
+                  GridActivity.setQuery(null);
+               }
+            });
+            ll.addView(iv, -2, -2);
             separator(ll);
             ll.addView(prepareText("TIME OF A DAY", 0xff555555));
             ll.addView(timeOfADay, -1, h);
@@ -93,14 +114,17 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
             cities.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
-                  final SeriesSelection seriesSelection = cities.getCurrentSeriesAndPoint();
-                  if (seriesSelection == null) {
-                     //Toast.makeText(Dashboard.this, "No chart element", Toast.LENGTH_SHORT).show();
-                  } else {
-                     // display information of the clicked point
-                     PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
-                     q.city = cities.inOrder.get((int)seriesSelection.getXValue());
-                     GridActivity.setQuery(q);
+                  try {
+                     final SeriesSelection seriesSelection = cities.getCurrentSeriesAndPoint();
+                     if (seriesSelection == null) {
+                        //Toast.makeText(Dashboard.this, "No chart element", Toast.LENGTH_SHORT).show();
+                     } else {
+                        // display information of the clicked point
+                        PhotoStorage.CityQuery q = new PhotoStorage.CityQuery();
+                        q.city = cities.inOrder.get((int) seriesSelection.getXValue());
+                        GridActivity.setQuery(q);
+                     }
+                  } catch (NullPointerException npe) {
                   }
                }
             });
@@ -111,11 +135,14 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
             colorPie.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
-                  SeriesSelection seriesSelection = colorPie.getCurrentSeriesAndPoint();
-                  int index = seriesSelection.getPointIndex();
-                  PhotoStorage.ColorQuery q = new PhotoStorage.ColorQuery();
-                  q.color = colorPie.inOrder.get(index);
-                  GridActivity.setQuery(q);
+                  try {
+                     SeriesSelection seriesSelection = colorPie.getCurrentSeriesAndPoint();
+                     int index = seriesSelection.getPointIndex();
+                     PhotoStorage.ColorQuery q = new PhotoStorage.ColorQuery();
+                     q.color = colorPie.inOrder.get(index);
+                     GridActivity.setQuery(q);
+                  } catch (NullPointerException npe) {
+                  }
                }
             });
          }
