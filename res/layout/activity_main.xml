@@ -5,12 +5,16 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     tools:context=".GridActivity" >
-
+    <TextView
+        android:id="@+id/gridheader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Happy TextView Header Fuck"/>
     <com.origamilabs.library.views.StaggeredGridView
         android:id="@+id/staggeredGridView1"
-        staggered:numColumns="2"
+        android:layout_below="@id/gridheader"
+        staggered:numColumns="3"
         staggered:drawSelectorOnTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" /> 
-
+        android:layout_height="wrap_content" />
 </RelativeLayout>
