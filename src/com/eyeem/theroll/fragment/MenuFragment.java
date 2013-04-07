@@ -1,6 +1,7 @@
 package com.eyeem.theroll.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.eyeem.storage.Storage;
 import com.eyeem.theroll.GridActivity;
@@ -56,8 +58,11 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
             final ColorPie colorPie = new ColorPie(ctx);
 
             int h = getResources().getDimensionPixelSize(R.dimen.graph_height);
+            ll.addView(prepareText("TIME OF A DAY"));
             ll.addView(timeOfADay, -1, h);
+            ll.addView(prepareText("CITIES"));
             ll.addView(cities, -1, h);
+            ll.addView(prepareText("COLORS"));
             ll.addView(colorPie, -1, h);
 
             timeOfADay.setValues(PhotoStorage.daysStats);
@@ -111,6 +116,15 @@ public class MenuFragment extends SherlockFragment implements Storage.Subscripti
             });
          }
       });
+   }
+
+   private TextView prepareText(String text) {
+      TextView tv = new TextView(getSherlockActivity());
+      tv.setText(text);
+      tv.setTypeface(Typeface.DEFAULT_BOLD);
+      tv.setTextColor(0xff555555);
+      tv.setPadding((int)getSherlockActivity().getResources().getDimensionPixelSize(R.dimen.paddin_left_text), 0, 0, 0);
+      return tv;
    }
 
    @Override

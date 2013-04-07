@@ -43,11 +43,12 @@ public class TimeOfADay extends GraphicalView {
       setup.currentRenderer.setLineWidth(4);
       setup.currentRenderer.setPointStyle(PointStyle.CIRCLE);
       setup.currentRenderer.setColor(getResources().getColor(R.color.blueish));
-      setup.renderer.setLabelsTextSize(getResources().getDimension(R.dimen.label_text_size));
+      setup.renderer.setLabelsTextSize(getResources().getDimension(R.dimen.label_text_size)*0.66f);
       setup.renderer.addXTextLabel(1, "morning");
       setup.renderer.addXTextLabel(2, "afternoon");
       setup.renderer.addXTextLabel(3, "evening");
       setup.renderer.addXTextLabel(4, "night");
+      setup.renderer.setXLabelsColor(0xff2cddd4);
       setup.renderer.setXLabels(0);
       setup.renderer.setYLabels(0);
       setup.renderer.setXAxisMin(0.5);

@@ -3,6 +3,7 @@ package com.eyeem.theroll.widgets;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.widget.Toast;
 import com.eyeem.theroll.R;
 import com.eyeem.theroll.utils.AllColorsEver;
@@ -15,6 +16,7 @@ import org.achartengine.renderer.SimpleSeriesRenderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -94,6 +96,11 @@ public class ColorPie extends GraphicalView {
          protected int drawLegend(Canvas canvas, DefaultRenderer renderer, String[] titles, int left, int right, int y, int width, int height, int legendSize, Paint paint, boolean calculate) {
             return 0;
             //return super.drawLegend(canvas, renderer, titles, left, right, y, width, height, legendSize, paint, calculate);    //To change body of overridden methods use File | Settings | File Templates.
+         }
+
+         @Override
+         protected void drawLabel(Canvas canvas, String labelText, DefaultRenderer renderer, List<RectF> prevLabelsBounds, int centerX, int centerY, float shortRadius, float longRadius, float currentAngle, float angle, int left, int right, int color, Paint paint) {
+            //super.drawLabel(canvas, labelText, renderer, prevLabelsBounds, centerX, centerY, shortRadius, longRadius, currentAngle, angle, left, right, color, paint);    //To change body of overridden methods use File | Settings | File Templates.
          }
       };
       return s;

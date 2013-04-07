@@ -15,6 +15,7 @@ import org.achartengine.renderer.XYSeriesRenderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -86,6 +87,8 @@ public class Cities extends GraphicalView {
       s.renderer.setXAxisMax(5 + 0.5);
       s.renderer.setYAxisMin(0);
       s.renderer.setYAxisMax(5);
+      s.renderer.setXLabelsColor(0xff2cddd4);
+      s.renderer.setXLabelsAngle(30);
       s.renderer.setBarSpacing(0.7);
       s.renderer.setMarginsColor(App.the.getResources().getColor(R.color.bg));
       s.renderer.setInScroll(true);
@@ -94,6 +97,13 @@ public class Cities extends GraphicalView {
          protected int drawLegend(Canvas canvas, DefaultRenderer renderer, String[] titles, int left, int right, int y, int width, int height, int legendSize, Paint paint, boolean calculate) {
             return 0;
             //return super.drawLegend(canvas, renderer, titles, left, right, y, width, height, legendSize, paint, calculate);    //To change body of overridden methods use File | Settings | File Templates.
+         }
+
+         @Override
+         protected void drawXLabels(List<Double> xLabels, Double[] xTextLabelLocations, Canvas canvas, Paint paint, int left, int top, int bottom, double xPixelsPerUnit, double minX, double maxX) {
+            canvas.translate(0, 30);
+            super.drawXLabels(xLabels, xTextLabelLocations, canvas, paint, left, top, bottom, xPixelsPerUnit, minX, maxX);    //To change body of overridden methods use File | Settings | File Templates.
+            canvas.translate(0, -30);
          }
       };
       return s;
