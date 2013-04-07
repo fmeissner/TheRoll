@@ -70,6 +70,7 @@ public class Scanner extends Service {
             @Override
             public void run() {
                scanPhotos();
+               PhotoStorage.all().save();
             }
          });
          t.setPriority(Thread.MIN_PRIORITY);
@@ -100,7 +101,7 @@ public class Scanner extends Service {
          if(height!=null)
             photo.height = Integer.parseInt(height);*/
          if (photo != null) {
-            storage.push(photo);
+            storage.all().add(photo);
          }
          processedCount++;
          if (processedCount > 150) {
@@ -138,7 +139,7 @@ public class Scanner extends Service {
                   photo.height = Integer.parseInt(newExif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
                }
             }catch (Exception e) {
-               // TODO: handle exception
+               Log.e(this, "process() error", e);
             }
          }
          //GET inferred data (day, time of day, city, country)

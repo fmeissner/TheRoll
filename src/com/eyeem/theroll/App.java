@@ -2,6 +2,7 @@ package com.eyeem.theroll;
 
 import android.app.Application;
 import android.content.Intent;
+import com.eyeem.storage.Storage;
 import com.eyeem.theroll.service.Scanner;
 import com.eyeem.theroll.storage.PhotoStorage;
 
@@ -23,9 +24,17 @@ public class App extends Application {
       // initialize storage
       PhotoStorage.initialize(this);
 
-      // start scanning
-      Intent scanIntent = new Intent(this, Scanner.class);
-      scanIntent.setAction(Scanner.ACTION_SCAN);
-      startService(scanIntent);
+      // first load storage, then start scanning
+      PhotoStorage.all().subscribe(new Storage.Subscription() {
+         @Override
+         public void onUpdate(Action action) {
+            if (action.name.equals(Storage.Subscription.LOADED)) {
+               Intent scanIntent = new Intent(the, Scanner.class);
+               scanIntent.setAction(Scanner.ACTION_SCAN);
+               startService(scanIntent);
+            }
+         }
+      });
+      PhotoStorage.all().load();
    }
 }

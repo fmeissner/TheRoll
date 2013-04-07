@@ -38,4 +38,8 @@ public class PhotoStorage extends Storage<Photo> {
    public static PhotoStorage getInstance() {
       return sInstance;
    }
+
+   public static List all() {
+      return sInstance.obtainList("all");
+   }
 }
