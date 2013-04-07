@@ -44,7 +44,7 @@ public class AllColorsEver {
       map.put("purple",      0xff87407A);
       map.put("red",         0xff9b1b30);
       map.put("teal",        0xff426972);
-      map.put("turqoise",    0xff38AFCD);
+      map.put("turquoise",   0xff38AFCD);
       map.put("violet",      0xff473854);
       map.put("white",       0xffffffff);
       map.put("yellow",      0xffF6D155);

@@ -80,12 +80,15 @@ public class Dashboard extends Activity implements Storage.Subscription {
          public void run() {
             timeOfADay.setValues(PhotoStorage.getInstance().daysStats);
             timeOfADay.repaint();
+            timeOfADay.invalidate();
 
             cities.setupValues(PhotoStorage.getInstance().cityStats);
             cities.repaint();
+            cities.invalidate();
 
             colorPie.setupValues(PhotoStorage.getInstance().colorStats);
             colorPie.repaint();
+            colorPie.invalidate();
          }
       });
    }

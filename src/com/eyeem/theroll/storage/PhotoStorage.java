@@ -53,14 +53,14 @@ public class PhotoStorage extends Storage<Photo> {
    @Override
    protected void addOrUpdate(String id, Photo object) {
       // daysStats
-      if ("Morning".equals(object.day)) {
-         daysStats[0]++;
-      } else if ("Afternoon".equals(object.day)) {
-         daysStats[1]++;
-      } else if ("Evening".equals(object.day)) {
-         daysStats[2]++;
-      } else if ("Night".equals(object.day)) {
-         daysStats[3]++;
+      if ("Morning".equals(object.timeOfDay)) {
+         daysStats[0] = daysStats[0]+1;
+      } else if ("Afternoon".equals(object.timeOfDay)) {
+         daysStats[1] = daysStats[1]+1;
+      } else if ("Evening".equals(object.timeOfDay)) {
+         daysStats[2] = daysStats[2]+1;
+      } else if ("Night".equals(object.timeOfDay)) {
+         daysStats[3] = daysStats[3]+1;
       }
 
       // cityStats

@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import com.eyeem.theroll.App;
 import com.eyeem.theroll.R;
 import com.eyeem.theroll.utils.AllColorsEver;
+import com.eyeem.theroll.utils.Log;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart;
 import org.achartengine.chart.PieChart;
@@ -56,6 +57,7 @@ public class ColorPie extends GraphicalView {
          setup.dataset.add(colorName, values.get(colorName));
          SimpleSeriesRenderer r = new SimpleSeriesRenderer();
          currentRenderers.add(r);
+         Log.i(getContext(),"color:"+colorName);
          r.setColor(AllColorsEver.name(colorName));
          setup.renderer.addSeriesRenderer(r);
       }
