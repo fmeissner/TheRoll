@@ -1,18 +1,38 @@
 package com.eyeem.theroll;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+import com.eyeem.storage.Storage;
+import com.eyeem.theroll.model.Photo;
+import com.eyeem.theroll.storage.PhotoStorage;
 import com.origamilabs.library.views.StaggeredGridView;
 
 
 public class GridActivity extends Activity implements View.OnClickListener {
+
+   String city;
+   String timeOfDay;
+   String color;
+
+   public static void startWithQuery(String city, String timeOfDay, String color, Context context) {
+      Intent intent = new Intent(context, GridActivity.class);
+      if (!TextUtils.isEmpty(city))
+         intent.putExtra("city", city);
+      if (!TextUtils.isEmpty(timeOfDay))
+      intent.putExtra("timeOfDay", timeOfDay);
+      if (!TextUtils.isEmpty(color))
+         intent.putExtra("color", color);
+      context.startActivity(intent);
+   }
 
    private String urls[] = {
            "/storage/emulated/0/DCIM/Camera/IMG_20130403_145042.jpg",
@@ -177,6 +197,9 @@ public class GridActivity extends Activity implements View.OnClickListener {
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      city = getIntent().getStringExtra("city");
+      timeOfDay = getIntent().getStringExtra("timeOfDay");
+      color = getIntent().getStringExtra("color");
       requestWindowFeature(Window.FEATURE_NO_TITLE);
       setContentView(R.layout.activity_main);
       StaggeredGridView gridView = (StaggeredGridView) this.findViewById(R.id.staggeredGridView1);
@@ -187,11 +210,12 @@ public class GridActivity extends Activity implements View.OnClickListener {
 
       gridView.setPadding(margin, 0, margin, 0); // have the margin on the sides as well
 
-      StaggeredAdapter adapter = new StaggeredAdapter(GridActivity.this, R.id.imageView1, urls);
+      StaggeredAdapter adapter = new StaggeredAdapter(GridActivity.this, R.id.imageView1, getUrls());
 
       gridView.setAdapter(adapter);
       adapter.notifyDataSetChanged();
    }
+
    @Override
    public void onClick(View v) {
       switch (v.getId()) {
@@ -203,5 +227,50 @@ public class GridActivity extends Activity implements View.OnClickListener {
          default:
             break;
       }
+   }
+
+   private String[] getUrls() {
+
+      Storage.Query<Photo> query = null;
+
+      if (!TextUtils.isEmpty(city)) {
+         query = new Storage.Query<Photo>() {
+            @Override
+            public boolean eval(Photo photo) {
+               return !TextUtils.isEmpty(photo.city) && photo.city.equals(city);
+            }
+         };
+      } else if (!TextUtils.isEmpty(timeOfDay)) {
+         query = new Storage.Query<Photo>() {
+            @Override
+            public boolean eval(Photo photo) {
+               return !TextUtils.isEmpty(photo.timeOfDay) && photo.timeOfDay.equals(timeOfDay);
+            }
+         };
+      } else if (!TextUtils.isEmpty(color)) {
+         query = new Storage.Query<Photo>() {
+            @Override
+            public boolean eval(Photo photo) {
+               // TODO implement
+               return false;
+            }
+         };
+      }
+
+      if (query == null) {
+         return null;
+      }
+
+      PhotoStorage.List list = PhotoStorage.getInstance().obtainList("grid");
+      list.setQuery(query);
+      list.reloadQuery();
+
+      String[] urls = new String[list.size()];
+      try {
+         for (int i = 0; i < urls.length; i++) {
+            urls[i] = list.get(i).filePath;
+         }
+      } catch (Throwable w) {/*best coding ever!*/}
+      return urls;
    }
 }

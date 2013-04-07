@@ -2,7 +2,6 @@ package com.eyeem.theroll.widgets;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import com.eyeem.theroll.App;
 import com.eyeem.theroll.R;
@@ -14,6 +13,7 @@ import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -37,7 +37,10 @@ public class Cities extends GraphicalView {
       this(context, initChart());
    }
 
+   public ArrayList<String> inOrder = new ArrayList<String>();
+
    public void setupValues(HashMap<String, Integer> values) {
+      inOrder.clear();
       this.values = values;
       setup.currentSeries.setTitle(null);
       int count = values.keySet().size();
@@ -46,6 +49,7 @@ public class Cities extends GraphicalView {
       for (String cityName : values.keySet()) {
          if (max < values.get(cityName))
             max = values.get(cityName);
+         inOrder.add(cityName);
          setup.currentSeries.add(i, values.get(cityName));
          setup.renderer.addXTextLabel(i, cityName);
          i++;
