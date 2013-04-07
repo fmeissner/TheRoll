@@ -78,6 +78,14 @@ public class ColorPie extends GraphicalView {
       // s.renderer.setMarginsColor(App.the.getResources().getColor(R.color.bg));
       s.chart = new PieChart(s.dataset, s.renderer) {
          @Override
+         public void draw(Canvas canvas, int x, int y, int width, int height, Paint paint) {
+            try {
+               super.draw(canvas, x, y, width, height, paint);    //To change body of overridden methods use File | Settings | File Templates.
+            } catch (IndexOutOfBoundsException e) {
+            }
+         }
+
+         @Override
          protected int drawLegend(Canvas canvas, DefaultRenderer renderer, String[] titles, int left, int right, int y, int width, int height, int legendSize, Paint paint, boolean calculate) {
             return 0;
             //return super.drawLegend(canvas, renderer, titles, left, right, y, width, height, legendSize, paint, calculate);    //To change body of overridden methods use File | Settings | File Templates.
